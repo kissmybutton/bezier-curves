@@ -14,6 +14,3 @@ For example 3 elements will placed on time 0.25, 0.5, 0.75, 4 elements on 0.2, 0
 
 If the user changes the number of elements through the slider or resize window the app redraws keeping the exact same curves that currently exist on the canvas.
 If the user alters though the number of curves then the existing curves get discarded and new curves get on the canvas.
-
-### Other inforamation
-This app was developed by KissMyButton.gr after the specs provided by vmware as part of a due diligence examination. 
