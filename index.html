@@ -1,0 +1,32 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Bezier curves exercise</title>
+  <meta name="description" content="Bezier curves exercise">
+  <meta name="author" content="KMB">
+
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <canvas id="myCanvas"></canvas>
+    <canvas id="pointsCanvas"></canvas>
+    <div id="controls">
+        <div>
+            <div>Number of curves</div>
+            <input type="range" min="1" max="100" value="3" class="slider" id="numberOfCurves">
+            <span id="numberOfCurvesNumber">3</span>
+        </div>
+        
+        <div>
+            <div>Number of elements</div>
+            <input type="range" min="1" max="100" value="3" class="slider" id="numberOfPoints">
+            <span id="numberOfPointsNumber">3</span>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
