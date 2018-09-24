@@ -122,6 +122,12 @@
             };
             curves.push(theCurve);
             drawBezierCurve(theCurve, accuracy);  
+            
+            // code commented out but kept for testing purposes
+            // ctx.beginPath();
+            // ctx.moveTo(0, 0);
+            // ctx.bezierCurveTo(wW*theCurve.p1.x, wH*theCurve.p1.y, wW*theCurve.p2.x, wH*theCurve.p2.y, wW, wH);
+            // ctx.stroke();
         }
         drawElements();
     }
