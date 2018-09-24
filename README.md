@@ -3,6 +3,7 @@
 ## Notes
 ### Final result
 Just download / fork the repository and open the index.html file on your browser.
+Online demo: https://kissmybutton.github.io/bezier-curves/
 
 ### Description
 On load the page creates three bezier curves with random control points. The arbitary control points' values (on an 1x1 space) are from 0 to 1. This way we 
