@@ -32,6 +32,10 @@
         return {x: x, y: y};
     };
     
+    var calcLineLength = function(p0, p1){
+        return Math.sqrt((p1.x - p0.x)*(p1.x - p0.x) + (p1.y - p0.y)*(p1.y - p0.y));
+    }
+    
     var drawBezierCurve = function(theCurve, accuracy){
         var wW = window.innerWidth;
         var wH = window.innerHeight;
@@ -42,6 +46,11 @@
         var p3 = {x: wW, y:wH};
         var curveColor = theCurve.color;
         
+        // start curve length calculation by initially setting it to 0
+        theCurve.length = 0;
+        let previousPoint = null; // keep a reference to the previous point of the polyline so 
+        // the length of the line can be calculated on each step
+        
         var c = document.getElementById('myCanvas');
         var ctx = c.getContext('2d');
         
@@ -49,14 +58,63 @@
         
         ctx.beginPath();
         ctx.moveTo(p0.x, p0.y);
+        previousPoint = JSON.parse(JSON.stringify(p0));
         for (var i=0; i<1; i+=accuracy){
             var p = bezier(i, p0, p1, p2, p3);
             ctx.lineTo(p.x, p.y);
+            theCurve.length += calcLineLength(previousPoint, p);
+            previousPoint = JSON.parse(JSON.stringify(p));
         }
+        
+        ctx.lineTo(p3.x, p3.y);
+        theCurve.length += calcLineLength(previousPoint, p3);
         
         ctx.stroke();
     }
     
+    
+    var drawBezierElements = function(theCurve, accuracy, elementsNumber){
+        var wW = window.innerWidth;
+        var wH = window.innerHeight;
+        
+        var p0 = {x:0, y: 0};
+        var p1 = {x: wW*theCurve.p1.x, y: wH*theCurve.p1.y};
+        var p2 = {x: wW*theCurve.p2.x, y: wH*theCurve.p2.y};
+        var p3 = {x: wW, y:wH};
+
+        var stepLength = theCurve.length / (elementsNumber + 1); // the step length of each equally lengthed curve
+        var currentStep = 1; // the current point that we want to draw
+        
+        var progressiveLength = 0; // keeps the current length of the curve while progressing with the sub-curves
+        var previousPoint = null; // keep a reference to the previous point of the polyline so 
+                                  // the length of the line can be calculated on each step
+        
+        var c = document.getElementById('pointsCanvas');
+        var ctx = c.getContext('2d');
+        
+        previousPoint = JSON.parse(JSON.stringify(p0));
+        for (var i=0; i<1; i+=accuracy){
+            var p = bezier(i, p0, p1, p2, p3);
+            progressiveLength += calcLineLength(previousPoint, p);
+            if(progressiveLength >= currentStep*stepLength){
+                ctx.beginPath();
+                ctx.strokeStyle = theCurve.color;
+                ctx.fillStyle = theCurve.color;
+                ctx.arc(p.x, p.y, 10, 0, 2 * Math.PI, false);
+                ctx.fill();
+                currentStep += 1;
+                if(currentStep > elementsNumber){
+                    break;
+                }
+            }
+            previousPoint = JSON.parse(JSON.stringify(p));
+        }
+    }
+    
+    
+    /**   
+     * draws elements of equal t distance 
+    */
     var drawElements = function(){
         var wW = window.innerWidth;
         var wH = window.innerHeight;
@@ -78,6 +136,25 @@
             }    
         }
     }
+    
+    /**
+     * draws elements of equal distance on the curve 
+    */
+    var altDrawElements = function(){
+        var wW = window.innerWidth;
+        var wH = window.innerHeight;
+        var numberOfElements = parseInt(document.getElementById("numberOfPoints").value);
+        
+        var c = document.getElementById('pointsCanvas');
+        var c = document.getElementById('pointsCanvas');
+        c.width = wW;
+        c.height = wH;
+        for(var j=0; j<curves.length; j++){
+            var theCurve = curves[j];
+            drawBezierElements(theCurve, accuracy, numberOfElements);   
+        }
+    }
+    
     
     /* invoded on window resize. It doesn't generate new curves, it uses the 
     existing ones */
@@ -129,7 +206,7 @@
             // ctx.bezierCurveTo(wW*theCurve.p1.x, wH*theCurve.p1.y, wW*theCurve.p2.x, wH*theCurve.p2.y, wW, wH);
             // ctx.stroke();
         }
-        drawElements();
+        altDrawElements();
     }
     
     
@@ -140,7 +217,7 @@
         if(resizeTimeout != false){
             clearTimeout(resizeTimeout);
         }
-        resizeTimeout = setTimeout(function(){redraw(); drawElements()}, resizeLatency); 
+        resizeTimeout = setTimeout(function(){redraw(); altDrawElements()}, resizeLatency); 
     });
     
     var curvesNumberInput = document.getElementById('numberOfCurves');
@@ -158,7 +235,7 @@
     };
     
     elementsNumberInput.onchange = function(e){
-        drawElements();
+        altDrawElements();
     };
     
     
