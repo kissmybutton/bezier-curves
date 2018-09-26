@@ -1,6 +1,6 @@
 (function bezierCurves(){
     var curves = [];
-    var accuracy = 0.001;
+    var accuracy = 0.0002;
     var randomNumberMax = 1;
     var randomNumberMin = 0;
     
@@ -95,12 +95,27 @@
         previousPoint = JSON.parse(JSON.stringify(p0));
         for (var i=0; i<1; i+=accuracy){
             var p = bezier(i, p0, p1, p2, p3);
-            progressiveLength += calcLineLength(previousPoint, p);
+            var previousLength = progressiveLength;
+            var lineLength = calcLineLength(previousPoint, p);
+            progressiveLength += lineLength;
             if(progressiveLength >= currentStep*stepLength){
+                // pick the point to draw the 
+                // var pointToUse = p;
+                // if(progressiveLength - currentStep*stepLength > currentStep*stepLength - previousLength){
+                //     pointToUse = previousPoint;
+                // }
+                
+                var distanceOnLIne = progressiveLength - currentStep*stepLength;
+                var t = distanceOnLIne/lineLength;
+                var pointToUse = {
+                    x: (1-t)*previousPoint.x + t*p.x,
+                    y: (1-t)*previousPoint.y + t*p.y
+                }
+                
                 ctx.beginPath();
                 ctx.strokeStyle = theCurve.color;
                 ctx.fillStyle = theCurve.color;
-                ctx.arc(p.x, p.y, 10, 0, 2 * Math.PI, false);
+                ctx.arc(pointToUse.x, pointToUse.y, 10, 0, 2 * Math.PI, false);
                 ctx.fill();
                 currentStep += 1;
                 if(currentStep > elementsNumber){
