@@ -12,6 +12,8 @@
         numberOfCurves: 0,
         curvesMeter: document.getElementById('curvesProgress'),
         curvesProgressBar: document.querySelector('#curvesProgress .meter'),
+        curvesSlider: document.getElementById('numberOfCurves'),
+        elementsSlider: document.getElementById('numberOfPoints'),
 
         // numberOfCurves is the number of curves that will be plotted. 
         // fullLoad is a boolean indicating whether we are drawing both the curves and the elements or only the elements
@@ -23,6 +25,8 @@
                 this.numberOfCurves *= 2;
             }
             
+            this.curvesSlider.setAttribute('disabled', 'true');
+            this.elementsSlider.setAttribute('disabled', 'true');
             this.curvesMeter.style.display = 'block';
         },
         
@@ -32,7 +36,9 @@
             this.curvesProgressBar.style.width = percentage + '%';
             
             if(percentage === 100){
-               this.curvesMeter.style.display = 'none'; 
+                this.curvesMeter.style.display = 'none'; 
+                this.curvesSlider.removeAttribute('disabled');
+                this.elementsSlider.removeAttribute('disabled');
             }
         }
     }
