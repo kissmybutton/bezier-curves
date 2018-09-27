@@ -33,3 +33,32 @@ body{
     top: -7px;
     position: relative;
 }
+
+.progressInfo{
+    position: absolute;
+    bottom: 10px;
+    background-color:rgba(0, 0, 0, 0.5);
+    z-index: 3;
+    width:100%;
+    height: 40px;
+    padding:10px;
+    display: none;
+}
+
+.progressInfo .title{
+    width:100%;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+}
+
+.progressInfo .meter{
+    height: 2px;
+    background-color: white;
+    width: 50%;
+    margin-top:10px;
+}
+
+#curvesProgress{
+    left: 10px;
+}
